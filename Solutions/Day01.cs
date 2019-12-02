@@ -27,6 +27,6 @@ namespace AdventOfCode.Solutions
         private static int CalculateFuel(int i) => (i / 3) - 2;
 
         private static IEnumerable<int> GetPuzzleInput()
-            => File.ReadAllLines("Input/Day01.txt").Select(i => int.Parse(i));
+            => File.ReadAllLines("Input/Day01.txt").Select(int.Parse);
     }
 }
