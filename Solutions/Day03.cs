@@ -164,8 +164,6 @@ namespace AdventOfCode.Solutions
                 return true;
             }
 
-            private void AAAA(int a1, int a2, )
-
             private Intersection GetIntersection(Position intersectionPosition, Edge other)
             {
                 var distance = this.GetDistanceToOrigin(intersectionPosition);
