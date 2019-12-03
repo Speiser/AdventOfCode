@@ -14,6 +14,7 @@ namespace AdventOfCode
             //Console.WriteLine(Day02.Puzzle2()); // 8018
 
             Console.WriteLine(Day03.Puzzle1()); // 1017
+            Console.WriteLine(Day03.Puzzle2()); // 11432
         }
     }
 }

@@ -12,15 +12,22 @@ namespace AdventOfCode.Solutions
         {
             var input = GetPuzzleInput();
             var intersections = GetIntersections(input);
-            return intersections.Min(CalculateManhattanDistance);
+            return intersections.Min(i => CalculateManhattanDistance(new Position(), i.Position));
         }
 
-        private static IEnumerable<Position> GetIntersections(string[] input)
+        public static int Puzzle2()
+        {
+            var input = GetPuzzleInput();
+            var intersections = GetIntersections(input);
+            return intersections.Min(i => i.TotalStepsToReach);
+        }
+
+        private static IEnumerable<Intersection> GetIntersections(string[] input)
         {
             var firstWirePath = GetWirePath(input[0]);
             var secondWirePath = GetWirePath(input[1]);
 
-            var intersections = new List<Position>();
+            var intersections = new List<Intersection>();
 
             foreach (var firstWireEdge in firstWirePath)
             {
@@ -33,7 +40,7 @@ namespace AdventOfCode.Solutions
                 }
             }
 
-            return intersections.Where(i => i.X != 0 && i.Y != 0);
+            return intersections.Where(i => i.Position.X != 0 && i.Position.Y != 0);
         }
 
         private static string[] GetPuzzleInput() => File.ReadAllLines("Input/Day03.txt");
@@ -69,7 +76,10 @@ namespace AdventOfCode.Solutions
                         throw new ArgumentOutOfRangeException($"Unknown direction: {direction}");
                 }
 
-                path.Add(new Edge(new Position { X = currentX, Y = currentY }, new Position { X = newX, Y = newY }));
+                path.Add(new Edge(
+                    new Position { X = currentX, Y = currentY },
+                    new Position { X = newX, Y = newY }) 
+                    { Previous = path.LastOrDefault() });
 
                 currentX = newX;
                 currentY = newY;
@@ -78,7 +88,7 @@ namespace AdventOfCode.Solutions
             return path;
         }
 
-        private static int CalculateManhattanDistance(Position position) => Math.Abs(position.X) + Math.Abs(position.Y);
+        private static int CalculateManhattanDistance(Position left, Position right) => Math.Abs(right.X - left.X) + Math.Abs(right.Y - left.Y);
 
         [DebuggerDisplay("{Start.X}:{Start.Y} - {End.X}:{End.Y}")]
         private class Edge
@@ -90,16 +100,32 @@ namespace AdventOfCode.Solutions
                 this.IsHorizontal = this.Start.Y == this.End.Y;
             }
 
+            public Edge Previous { get; set; }
             public Position Start { get; }
             public Position End { get; }
             public bool IsHorizontal { get; }
 
-            public bool IntersectsWith(Edge other, out Position intersection)
+            public int GetDistanceToOrigin(Position from)
+            {
+                var distance = CalculateManhattanDistance(this.Start, from);
+
+                var temp = this.Previous;
+                while (temp != null)
+                {
+                    distance += CalculateManhattanDistance(temp.Start, temp.End);
+                    temp = temp.Previous;
+                }
+                return distance;
+            }
+
+            public bool IntersectsWith(Edge other, out Intersection intersection)
             {
                 intersection = null;
 
                 if (this.IsHorizontal && other.IsHorizontal)
                     return false;
+
+                Position intersectionPosition;
 
                 if (this.IsHorizontal)
                 {
@@ -114,9 +140,8 @@ namespace AdventOfCode.Solutions
 
                     if (this.Start.Y < otherMin || this.Start.Y > otherMax)
                         return false;
-
-                    intersection = new Position { X = other.Start.X, Y = this.Start.Y };
-                    return true;
+                    
+                    intersectionPosition = new Position { X = other.Start.X, Y = this.Start.Y };
                 }
                 else
                 {
@@ -132,9 +157,25 @@ namespace AdventOfCode.Solutions
                     if (this.Start.X < otherMin || this.Start.X > otherMax)
                         return false;
 
-                    intersection = new Position { X = this.Start.X, Y = other.Start.Y };
-                    return true;
+                    intersectionPosition = new Position { X = this.Start.X, Y = other.Start.Y };
                 }
+
+                intersection = this.GetIntersection(intersectionPosition, other);
+                return true;
+            }
+
+            private void AAAA(int a1, int a2, )
+
+            private Intersection GetIntersection(Position intersectionPosition, Edge other)
+            {
+                var distance = this.GetDistanceToOrigin(intersectionPosition);
+                var otherDistance = other.GetDistanceToOrigin(intersectionPosition);
+
+                return new Intersection
+                {
+                    Position = intersectionPosition,
+                    TotalStepsToReach = distance + otherDistance
+                };
             }
         }
 
@@ -143,6 +184,12 @@ namespace AdventOfCode.Solutions
         {
             public int X { get; set; }
             public int Y { get; set; }
+        }
+
+        private class Intersection
+        {
+            public Position Position { get; set; }
+            public int TotalStepsToReach { get; set; }
         }
 
         private static (char, int) ParseMovement(string movement)
