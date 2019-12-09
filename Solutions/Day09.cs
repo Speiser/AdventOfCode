@@ -2,16 +2,15 @@
 
 namespace AdventOfCode.Solutions
 {
-    public class Day05
+    public class Day09
     {
-        public static int Puzzle1() => (int)RunWithInput(1);
-
-        public static int Puzzle2() => (int)RunWithInput(5);
+        public static long Puzzle1() => RunWithInput(1);
+        public static long Puzzle2() => RunWithInput(2);
 
         private static long RunWithInput(long input)
         {
             long result = 0;
-            var computer = IntcodeComputer.LoadProgramFromFile("Input/Day05.txt", input);
+            var computer = IntcodeComputer.LoadProgramFromFile("Input/Day09.txt", input);
             computer.OnOutput += output => result = output;
             computer.EvaluateProgram().Wait();
             return result;

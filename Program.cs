@@ -28,8 +28,11 @@ namespace AdventOfCode
             //Console.WriteLine(Day07.Puzzle1()); // 79723
             //Console.WriteLine(Day07.Puzzle2()); // 70602018
 
-            Console.WriteLine(Day08.Puzzle1()); // 1572
-            Console.WriteLine(Day08.Puzzle2()); // KYHFE
+            //Console.WriteLine(Day08.Puzzle1()); // 1572
+            //Console.WriteLine(Day08.Puzzle2()); // KYHFE
+
+            Console.WriteLine(Day09.Puzzle1()); // 4080871669
+            Console.WriteLine(Day09.Puzzle2()); // 75202
         }
     }
 }
