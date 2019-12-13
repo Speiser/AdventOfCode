@@ -47,9 +47,9 @@ namespace AdventOfCode.Solutions
 
         private static List<PaintJob> RunRobotWithInput(long input)
         {
-            var brain = IntcodeComputer.LoadProgramFromFile("Input/Day11.txt", input);
+            var brain = IntcodeComputer.LoadProgramFromFile("Input/Day11.txt");
             var robot = new EmergencyHullPaintingRobot(brain);
-            return robot.Run();
+            return robot.Run(input);
         }
 
         private class EmergencyHullPaintingRobot
@@ -59,32 +59,28 @@ namespace AdventOfCode.Solutions
             private Position currentPosition = new Position();
             private Direction currentDirection = Direction.Up;
             private readonly List<PaintJob> painted = new List<PaintJob>();
+            private readonly Queue<long> inputQueue = new Queue<long>();
 
             public EmergencyHullPaintingRobot(IntcodeComputer brain)
             {
                 this.brain = brain;
-                var outputs = new int[] { -1, -1 };
-                brain.OnOutput += output =>
-                {
-                    if (outputs[0] == -1)
-                    {
-                        outputs[0] = (int)output;
-                        return;
-                    }
-
-                    outputs[1] = (int)output;
-
-                    // Handle actions
-                    this.Handle(outputs[0], outputs[1]);
-
-                    // Reset outputs
-                    outputs[0] = -1;
-                };
             }
 
-            public List<PaintJob> Run()
+            public List<PaintJob> Run(long input)
             {
-                this.brain.EvaluateProgram().Wait();
+                this.inputQueue.Enqueue(input);
+                var outputs = new List<int>();
+                this.brain.EvaluateProgram(
+                    () => this.inputQueue.Dequeue(),
+                    output =>
+                    {
+                        outputs.Add((int)output);
+                        if (outputs.Count == 2)
+                        {
+                            this.Handle(outputs[0], outputs[1]);
+                            outputs.Clear();
+                        }
+                    });
                 return this.painted;
             }
 
@@ -121,7 +117,7 @@ namespace AdventOfCode.Solutions
                 }
 
                 paintJob = this.GetPaintJobOfCurrentPosition();
-                this.brain.InputStream.Enqueue(paintJob is null ? 0 : paintJob.Color);
+                this.inputQueue.Enqueue(paintJob is null ? 0 : paintJob.Color);
             }
 
             private PaintJob GetPaintJobOfCurrentPosition() => this.painted.SingleOrDefault(p => p.Position.X == this.currentPosition.X && p.Position.Y == this.currentPosition.Y);

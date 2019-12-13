@@ -13,7 +13,7 @@ namespace AdventOfCode.Solutions
             computer.Memory[1] = 12;
             computer.Memory[2] = 2;
 
-            computer.EvaluateProgram().Wait();
+            computer.EvaluateProgram();
 
             return (int)computer.Memory[0];
         }
@@ -29,7 +29,7 @@ namespace AdventOfCode.Solutions
                     var computer = IntcodeComputer.LoadProgramFromString(input);
                     computer.Memory[1] = noun;
                     computer.Memory[2] = verb;
-                    computer.EvaluateProgram().Wait();
+                    computer.EvaluateProgram();
                     if (computer.Memory[0] == 19690720)
                         return noun * 100 + verb;
                 }

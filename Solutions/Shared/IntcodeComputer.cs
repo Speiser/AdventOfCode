@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AdventOfCode.Solutions.Shared
 {
@@ -11,34 +9,26 @@ namespace AdventOfCode.Solutions.Shared
         private int relativeBase = 0;
         private int ip = 0;
 
-        public IntcodeComputer(long[] memory, params long[] inputs)
+        public IntcodeComputer(long[] memory)
         {
-            foreach (var input in inputs)
-            {
-                this.InputStream.Enqueue(input);
-            }
-
             // Extend program memory
             this.Memory = memory.Concat(new long[1000]).ToArray();
         }
 
-        public ConcurrentQueue<long> InputStream { get; } = new ConcurrentQueue<long>();
         public long[] Memory { get; }
 
-        public event Action<long> OnOutput;
-
-        public static IntcodeComputer LoadProgramFromString(string input, params long[] inputs)
+        public static IntcodeComputer LoadProgramFromString(string input)
         {
             var program = input.Split(',').Select(long.Parse).ToArray();
-            return new IntcodeComputer(program, inputs);
+            return new IntcodeComputer(program);
         }
-        public static IntcodeComputer LoadProgramFromFile(string file, params long[] inputs)
+        public static IntcodeComputer LoadProgramFromFile(string file)
         {
             var fileContent = File.ReadAllText(file);
-            return LoadProgramFromString(fileContent, inputs);
+            return LoadProgramFromString(fileContent);
         }
 
-        public async Task EvaluateProgram()
+        public void EvaluateProgram(Func<long> getInput = null, Action<long> writeOutput = null)
         {
             while (true)
             {
@@ -53,11 +43,11 @@ namespace AdventOfCode.Solutions.Shared
                         this.ip += 4;
                         break;
                     case Opcode.Input:
-                        this.Write(1, await this.GetInput());
+                        this.Write(1, getInput());
                         this.ip += 2;
                         break;
                     case Opcode.Output:
-                        this.OnOutput?.Invoke(this.Read(1));
+                        writeOutput(this.Read(1));
                         this.ip += 2;
                         break;
                     case Opcode.JumpIfTrue:
@@ -84,20 +74,6 @@ namespace AdventOfCode.Solutions.Shared
             }
         }
 
-        private async Task<long> GetInput()
-        {
-            while (!this.InputStream.Any())
-            {
-                await Task.Delay(1);
-            }
-
-            if (!this.InputStream.TryDequeue(out var input))
-            {
-                throw new Exception("Threading...");
-            }
-
-            return input;
-        }
         private Opcode FetchOpcode() => (Opcode)(this.Memory[this.ip] % 100);
         private long Read(int position) => this.Memory[this.GetIndex(position)];
         private void Write(int position, long value) => this.Memory[this.GetIndex(position)] = value;

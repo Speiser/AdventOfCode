@@ -10,9 +10,8 @@ namespace AdventOfCode.Solutions
         private static long RunWithInput(long input)
         {
             long result = 0;
-            var computer = IntcodeComputer.LoadProgramFromFile("Input/Day09.txt", input);
-            computer.OnOutput += output => result = output;
-            computer.EvaluateProgram().Wait();
+            var computer = IntcodeComputer.LoadProgramFromFile("Input/Day09.txt");
+            computer.EvaluateProgram(() => input, output => result = output);
             return result;
         }
     }
