@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AdventOfCode.Solutions.Shared;
+using AdventOfCode2019.Solutions.Shared;
 
-namespace AdventOfCode.Solutions
+namespace AdventOfCode2019.Solutions
 {
     public class Day11
     {

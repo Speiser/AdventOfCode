@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace AdventOfCode.Solutions
+namespace AdventOfCode2019.Solutions
 {
     public class Day08
     {

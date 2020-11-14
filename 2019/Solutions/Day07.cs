@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AdventOfCode.Solutions.Shared;
+using AdventOfCode2019.Solutions.Shared;
 
-namespace AdventOfCode.Solutions
+namespace AdventOfCode2019.Solutions
 {
     public class Day07
     {

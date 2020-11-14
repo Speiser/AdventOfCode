@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace AdventOfCode.Solutions
+namespace AdventOfCode2019.Solutions
 {
     public class Day12
     {
