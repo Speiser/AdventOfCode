@@ -4,11 +4,11 @@ using NUnit.Framework;
 
 namespace AdventOfCode2020.Solutions
 {
-    public class REPLACE : ISolution
+    public class Day02 : ISolution
     {
         public void Solve()
         {
-            var input = Input.Text(nameof(REPLACE));
+            var input = Input.Text(nameof(Day02));
             Console.WriteLine(this.Puzzle1());
             Console.WriteLine(this.Puzzle2());
         }
@@ -29,15 +29,15 @@ namespace AdventOfCode2020.Solutions
             public void Puzzle1()
             {
                 const string expected = "";
-                var actual = new REPLACE().Puzzle1();
+                var actual = new Day02().Puzzle1();
                 Assert.AreEqual(expected, actual);
             }
-            
+
             [Test]
             public void Puzzle2()
             {
                 const string expected = "";
-                var actual = new REPLACE().Puzzle2();
+                var actual = new Day02().Puzzle2();
                 Assert.AreEqual(expected, actual);
             }
         }
