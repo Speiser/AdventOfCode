@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode2020.Solutions.Shared;
@@ -17,34 +17,21 @@ namespace AdventOfCode2020.Solutions
 
         private int Puzzle1(string[] lines)
         {
-            var input = this.SplitInput(lines);
-            var validCount = 0;
-            foreach (var entry in input)
+            return this.SplitInput(lines).Count(entry =>
             {
                 var count = entry.password.Count(c => c.ToString() == entry.letter);
-                if (count >= entry.min && count <= entry.max)
-                {
-                    validCount++;
-                }
-            }
-            return validCount;
+                return count >= entry.min && count <= entry.max;
+            });
         }
 
         private int Puzzle2(string[] lines)
         {
-            var input = this.SplitInput(lines);
-            var validCount = 0;
-            foreach (var entry in input)
+            return this.SplitInput(lines).Count(entry =>
             {
                 var left = this.IsCharAtPos(entry.password, entry.letter, entry.min);
                 var right = this.IsCharAtPos(entry.password, entry.letter, entry.max);
-
-                if (left ^ right)
-                {
-                    validCount++;
-                }
-            }
-            return validCount;
+                return left ^ right;
+            });
         }
 
         private bool IsCharAtPos(string password, string letter, int position)
