@@ -1,6 +1,5 @@
 ﻿using System;
 using AdventOfCode2020.Solutions.Shared;
-using NUnit.Framework;
 
 namespace AdventOfCode2020.Solutions
 {
@@ -8,38 +7,45 @@ namespace AdventOfCode2020.Solutions
     {
         public void Solve()
         {
-            var input = Input.Text(nameof(Day03));
-            Console.WriteLine(this.Puzzle1());
-            Console.WriteLine(this.Puzzle2());
+            var input = Input.Lines(nameof(Day03));
+            Console.WriteLine(this.Puzzle1(input));
+            Console.WriteLine(this.Puzzle2(input));
         }
 
-        private string Puzzle1()
-        {
-            return "P1";
-        }
+        private long Puzzle1(string[] lines) => this.CountTrees(lines, 3, 1);
 
-        private string Puzzle2()
-        {
-            return "P2";
-        }
+        private long Puzzle2(string[] lines) =>
+            CountTrees(lines, 1, 1) *
+            CountTrees(lines, 3, 1) *
+            CountTrees(lines, 5, 1) *
+            CountTrees(lines, 7, 1) *
+            CountTrees(lines, 1, 2);
 
-        private class Tests
+        private long CountTrees(string[] lines, int addX, int addY)
         {
-            [Test]
-            public void Puzzle1()
+            var x = 0;
+            var y = 0;
+            var treeCount = 0;
+
+            while (y < lines.Length - 1)
             {
-                const string expected = "";
-                var actual = new Day03().Puzzle1();
-                Assert.AreEqual(expected, actual);
+                x += addX;
+                y += addY;
+
+                var currentLine = lines[y];
+                if (x >= currentLine.Length)
+                {
+                    x -= currentLine.Length;
+                }
+
+                var elementAt = lines[y][x];
+                if (elementAt == '#')
+                {
+                    treeCount++;
+                }
             }
 
-            [Test]
-            public void Puzzle2()
-            {
-                const string expected = "";
-                var actual = new Day03().Puzzle2();
-                Assert.AreEqual(expected, actual);
-            }
+            return treeCount;
         }
     }
 }
