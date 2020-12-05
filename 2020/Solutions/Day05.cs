@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AdventOfCode2020.Solutions.Shared;
 using NUnit.Framework;
 
@@ -8,37 +9,75 @@ namespace AdventOfCode2020.Solutions
     {
         public void Solve()
         {
-            var input = Input.Text(nameof(Day05));
-            Console.WriteLine(this.Puzzle1());
-            Console.WriteLine(this.Puzzle2());
+            var input = Input.Lines(nameof(Day05));
+            Console.WriteLine(this.Puzzle1(input));
+            Console.WriteLine(this.Puzzle2(input));
         }
 
-        private string Puzzle1()
+        private int Puzzle1(string[] input) => input.Max(GetSeatId);
+
+        private int Puzzle2(string[] input)
         {
-            return "P1";
+            var all = input.Select(GetSeatId).OrderBy(x => x).ToArray();
+
+            for (var i = 0; i < all.Length; i++)
+            {
+                if (all[i + 1] == all[i] + 2)
+                    return all[i] + 1;
+            }
+
+            throw new InvalidProgramException();
         }
 
-        private string Puzzle2()
+        private static int GetSeatId(string line)
         {
-            return "P2";
+            var row = GetRow(line);
+            var col = GetColumn(line);
+            return row * 8 + col;
+        }
+
+        private static int GetRow(string line) => ReadFromBoardingPass(line, 0, 7, 128);
+
+        private static int GetColumn(string line) => ReadFromBoardingPass(line, 7, 10, 8);
+
+        private static int ReadFromBoardingPass(string line, int from, int to, int currentUpper)
+        {
+            var currentLower = 0;
+            for (var i = from; i < to; i++)
+            {
+                if (line[i] == 'F' || line[i] == 'L')
+                {
+                    currentUpper -= (currentUpper - currentLower) / 2;
+                }
+                else if (line[i] == 'B' || line[i] == 'R')
+                {
+                    currentLower += (currentUpper - currentLower) / 2;
+                }
+            }
+
+            return currentLower;
         }
 
         private class Tests
         {
-            [Test]
-            public void Puzzle1()
+            [TestCase("FBFBBFFRLR", 44)]
+            [TestCase("BFFFBBFRRR", 70)]
+            [TestCase("FFFBBBFRRR", 14)]
+            [TestCase("BBFFBBFRLL", 102)]
+            public void GetRow(string line, int expected)
             {
-                const string expected = "";
-                var actual = new Day05().Puzzle1();
-                Assert.AreEqual(expected, actual);
+                var res = Day05.GetRow(line);
+                Assert.AreEqual(expected, res);
             }
 
-            [Test]
-            public void Puzzle2()
+            [TestCase("FBFBBFFRLR", 5)]
+            [TestCase("BFFFBBFRRR", 7)]
+            [TestCase("FFFBBBFRRR", 7)]
+            [TestCase("BBFFBBFRLL", 4)]
+            public void GetColumn(string line, int expected)
             {
-                const string expected = "";
-                var actual = new Day05().Puzzle2();
-                Assert.AreEqual(expected, actual);
+                var res = Day05.GetColumn(line);
+                Assert.AreEqual(expected, res);
             }
         }
     }
