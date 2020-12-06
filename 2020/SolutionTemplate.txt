@@ -13,14 +13,14 @@ namespace AdventOfCode2020.Solutions
             Console.WriteLine(this.Puzzle2());
         }
 
-        private string Puzzle1()
+        private int Puzzle1()
         {
-            return "P1";
+            return -1;
         }
 
-        private string Puzzle2()
+        private int Puzzle2()
         {
-            return "P2";
+            return -1;
         }
 
         private class Tests
@@ -28,17 +28,15 @@ namespace AdventOfCode2020.Solutions
             [Test]
             public void Puzzle1()
             {
-                const string expected = "";
                 var actual = new REPLACE().Puzzle1();
-                Assert.AreEqual(expected, actual);
+                Assert.AreEqual(-1, actual);
             }
             
             [Test]
             public void Puzzle2()
             {
-                const string expected = "";
                 var actual = new REPLACE().Puzzle2();
-                Assert.AreEqual(expected, actual);
+                Assert.AreEqual(-1, actual);
             }
         }
     }

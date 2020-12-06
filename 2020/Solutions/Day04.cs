@@ -10,12 +10,12 @@ namespace AdventOfCode2020.Solutions
     {
         public void Solve()
         {
-            var input = Input.Text(nameof(Day04));
+            var input = Input.Text(nameof(Day04)).Blocks();
             Console.WriteLine(this.Puzzle1(input));
             Console.WriteLine(this.Puzzle2(input));
         }
 
-        private int Puzzle1(string input)
+        private int Puzzle1(string[] input)
         {
             return GetPassports(input).Count(passport =>
             {
@@ -24,7 +24,7 @@ namespace AdventOfCode2020.Solutions
             });
         }
 
-        private int Puzzle2(string input)
+        private int Puzzle2(string[] input)
         {
             return GetPassports(input).Count(passport =>
             {
@@ -33,7 +33,7 @@ namespace AdventOfCode2020.Solutions
             });
         }
 
-        private static IEnumerable<string> GetPassports(string input) => input.Split("\r\n\r\n").Select(i => i.Replace("\r\n", " "));
+        private static IEnumerable<string> GetPassports(string[] input) => input.Select(i => i.Replace("\r\n", " "));
         private static bool HasValidFields(string[] fields)
             => fields.Length == 8 || fields.Length == 7 && !fields.Any(field => field.StartsWith("cid"));
 
@@ -106,7 +106,7 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in";
                 const int expected = 2;
-                var actual = new Day04().Puzzle1(testInput);
+                var actual = new Day04().Puzzle1(testInput.Blocks());
                 Assert.AreEqual(expected, actual);
             }
 
@@ -127,7 +127,7 @@ hgt:59cm ecl:zzz
 eyr:2038 hcl:74454a iyr:2023
 pid:3556412378 byr:2007";
                 const int expected = 0;
-                var actual = new Day04().Puzzle2(testInput);
+                var actual = new Day04().Puzzle2(testInput.Blocks());
                 Assert.AreEqual(expected, actual);
             }
 
@@ -147,7 +147,7 @@ eyr:2022
 
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719";
                 const int expected = 4;
-                var actual = new Day04().Puzzle2(testInput);
+                var actual = new Day04().Puzzle2(testInput.Blocks());
                 Assert.AreEqual(expected, actual);
             }
         }
