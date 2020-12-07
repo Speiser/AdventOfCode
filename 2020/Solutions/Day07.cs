@@ -85,7 +85,7 @@ namespace AdventOfCode2020.Solutions
             [Test]
             public void Puzzle1()
             {
-                var actual = new Day07().Puzzle1(TestInput.Split("\n"));
+                var actual = new Day07().Puzzle1(TestInput.Split("\r\n"));
                 Assert.AreEqual(4, actual);
             }
 
@@ -93,7 +93,7 @@ namespace AdventOfCode2020.Solutions
             [TestCase(TestInput2, 126)]
             public void Puzzle2(string input, int expected)
             {
-                var actual = new Day07().Puzzle2(input.Split("\n"));
+                var actual = new Day07().Puzzle2(input.Split("\r\n"));
                 Assert.AreEqual(expected, actual);
             }
 
