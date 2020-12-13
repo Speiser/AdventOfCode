@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using AdventOfCode2020.Solutions.Shared;
-using NUnit.Framework;
 
 namespace AdventOfCode2020.Solutions
 {
@@ -15,31 +15,47 @@ namespace AdventOfCode2020.Solutions
 
         private int Puzzle1(string[] input)
         {
-            return -1;
-        }
+            var id = int.Parse(input[0]);
+            var items = input[1].Split(",").Where(x => x != "x").Select(int.Parse);
+            var closestId = 0;
+            var closestTime = int.MaxValue;
 
-        private int Puzzle2(string[] input)
-        {
-            return -1;
-        }
-
-        private class Tests
-        {
-            [Test]
-            public void Puzzle1()
+            foreach (var item in items)
             {
-                var actual = new Day13().Puzzle1(TestInput);
-                Assert.AreEqual(-1, actual);
+                var upper = id + item;
+                for (var i = id; i < upper; i++)
+                {
+                    if (i % item == 0 && i < closestTime)
+                    {
+                        closestId = item;
+                        closestTime = i;
+                    }
+                }
             }
 
-            [Test]
-            public void Puzzle2()
+            return closestId * (closestTime - id);
+        }
+
+        private long Puzzle2(string[] input)
+        {
+            var items = input[1].Split(",");
+            long earliest = 0;
+            long runningProduct = 1;
+
+            for (var i = 0; i < items.Length; i++)
             {
-                var actual = new Day13().Puzzle2(TestInput);
-                Assert.AreEqual(-1, actual);
+                if (items[i] == "x")
+                    continue;
+
+                var id = int.Parse(items[i]);
+
+                while ((earliest + i) % id != 0)
+                    earliest += runningProduct;
+
+                runningProduct *= id;
             }
 
-            private readonly string[] TestInput = @"".Split("\r\n");
+            return earliest;
         }
     }
 }
