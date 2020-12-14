@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AdventOfCode2020.Solutions.Shared;
-using NUnit.Framework;
 
 namespace AdventOfCode2020.Solutions
 {
@@ -13,33 +14,41 @@ namespace AdventOfCode2020.Solutions
             Console.WriteLine(this.Puzzle2(input));
         }
 
-        private int Puzzle1(string[] input)
+        private long Puzzle1(string[] input)
         {
-            return -1;
+            var currentMask = string.Empty;
+            var memory = new Dictionary<int, string>();
+
+            foreach (var line in input)
+            {
+                var split = line.Split(" = ");
+
+                if (split[0] == "mask")
+                {
+                    currentMask = split[1];
+                    continue;
+                }
+
+                var index = int.Parse(split[0].Replace("mem[", string.Empty).TrimEnd(']'));
+                var value = Convert.ToString(int.Parse(split[1]), toBase: 2).PadLeft(36, '0').ToCharArray();
+
+                for (var i = 0; i < value.Length; i++)
+                {
+                    if (currentMask[i] != 'X')
+                    {
+                        value[i] = currentMask[i];
+                    }
+                }
+
+                memory[index] = string.Join(string.Empty, value);
+            }
+
+            return memory.Values.Sum(x => Convert.ToInt64(x, fromBase: 2));
         }
 
         private int Puzzle2(string[] input)
         {
             return -1;
-        }
-
-        private class Tests
-        {
-            [Test]
-            public void Puzzle1()
-            {
-                var actual = new Day14().Puzzle1(TestInput);
-                Assert.AreEqual(-1, actual);
-            }
-
-            [Test]
-            public void Puzzle2()
-            {
-                var actual = new Day14().Puzzle2(TestInput);
-                Assert.AreEqual(-1, actual);
-            }
-
-            private readonly string[] TestInput = @"".Split("\r\n");
         }
     }
 }
