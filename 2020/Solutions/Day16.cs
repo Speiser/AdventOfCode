@@ -11,21 +11,25 @@ namespace AdventOfCode2020.Solutions
     // Part 2: 01:03:22   2027
     public class Day16 : ISolution
     {
+        private const int RulesLength = 20;
+        private const int YourTicketIndex = 22;
+        private const int NearbyTicketsIndex = 25;
+
         public void Solve()
         {
             var input = Input.Lines(nameof(Day16));
-            Console.WriteLine(this.Puzzle1(input) == 26053);
-            Console.WriteLine(this.Puzzle2(input) == 1515506256421);
+            Console.WriteLine(this.Puzzle1(input));
+            Console.WriteLine(this.Puzzle2(input));
         }
 
         private int Puzzle1(string[] input)
         {
-            var rules = ParseRules(input.Take(20));
+            var rules = ParseRules(input.Take(RulesLength));
 
             var invalidSum = 0;
-            for (var i = 25; i < input.Length; i++)
+            for (var i = NearbyTicketsIndex; i < input.Length; i++)
             {
-                var row = input[i].Split(",").Select(int.Parse);
+                var row = ParseTicket(input[i]);
                 foreach (var v in row)
                 {
                     var valid = false;
@@ -47,17 +51,14 @@ namespace AdventOfCode2020.Solutions
             return invalidSum;
         }
 
-        private static bool InRange((int, int, int, int) rule, int value)
-            => value >= rule.Item1 && value <= rule.Item2 || value >= rule.Item3 && value <= rule.Item4;
-
         private long Puzzle2(string[] input)
         {
-            var rules = ParseRules(input.Take(20));
+            var rules = ParseRules(input.Take(RulesLength));
 
             var nearbyValid = new List<int[]>();
-            for (var i = 25; i < input.Length; i++)
+            for (var i = NearbyTicketsIndex; i < input.Length; i++)
             {
-                var row = input[i].Split(",").Select(int.Parse).ToArray();
+                var row = ParseTicket(input[i]);
                 var valid = true;
                 foreach (var v in row)
                 {
@@ -78,21 +79,20 @@ namespace AdventOfCode2020.Solutions
             {
                 var ruleUseableFor = new List<int>();
 
-                for (var i = 0; i < nearbyValid.ElementAt(0).Length; i++)
+                for (var i = 0; i < nearbyValid[0].Length; i++)
                 {
-                    var column = nearbyValid.Select(x => x[i]);
-                    var valid = column.All(v => v >= rule.Value.Item1 && v <= rule.Value.Item2 || v >= rule.Value.Item3 && v <= rule.Value.Item4);
-                    if (valid) ruleUseableFor.Add(i);
+                    var allColumnValuesApplyToRule = nearbyValid.Select(x => x[i]).All(v => InRange(rule.Value, v));
+                    if (allColumnValuesApplyToRule)
+                    {
+                        ruleUseableFor.Add(i);
+                    }
                 }
 
                 usableFor.Add(rule.Key, ruleUseableFor);
             }
 
-            while (true)
+            while (!usableFor.All(x => x.Value.Count == 1))
             {
-                if (usableFor.All(x => x.Value.Count == 1))
-                    break;
-
                 var countIsOne = usableFor.Where(x => x.Value.Count == 1);
                 foreach (var remove in countIsOne)
                 {
@@ -103,13 +103,11 @@ namespace AdventOfCode2020.Solutions
                 }
             }
 
-            var depRules = usableFor.Where(x => x.Key.StartsWith("departure"));
-
             long prod = 1;
-            var myTicket = input[22].Split(",").Select(int.Parse).ToArray();
-            foreach (var (k, v) in depRules)
+            var yourTicket = ParseTicket(input[YourTicketIndex]);
+            foreach (var (k, v) in usableFor.Where(x => x.Key.StartsWith("departure")))
             {
-                prod *= myTicket[v[0]];
+                prod *= yourTicket[v[0]];
             }
 
             return prod;
@@ -128,5 +126,10 @@ namespace AdventOfCode2020.Solutions
             }
             return rules;
         }
+
+        private static int[] ParseTicket(string ticket) => ticket.Split(",").Select(int.Parse).ToArray();
+
+        private static bool InRange((int, int, int, int) rule, int value)
+            => value >= rule.Item1 && value <= rule.Item2 || value >= rule.Item3 && value <= rule.Item4;
     }
 }
