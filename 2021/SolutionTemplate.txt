@@ -1,0 +1,40 @@
+﻿namespace AdventOfCode2021;
+
+public class REPLACE : Solution
+{
+    public override void Solve()
+    {
+        var input = Input.Lines(nameof(REPLACE));
+        Console.WriteLine(this.Puzzle1(input));
+        Console.WriteLine(this.Puzzle2(input));
+    }
+
+    private int Puzzle1(string[] input)
+    {
+        return -1;
+    }
+
+    private int Puzzle2(string[] input)
+    {
+        return -1;
+    }
+
+    private class Tests
+    {
+        [Test]
+        public void Puzzle1()
+        {
+            var actual = new REPLACE().Puzzle1(TestInput);
+            Assert.AreEqual(-1, actual);
+        }
+
+        [Test]
+        public void Puzzle2()
+        {
+            var actual = new REPLACE().Puzzle2(TestInput);
+            Assert.AreEqual(-1, actual);
+        }
+
+        private readonly string[] TestInput = @"".Split("\r\n");
+    }
+}
