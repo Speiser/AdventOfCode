@@ -9,35 +9,48 @@ public class Day01 : Solution
         Console.WriteLine(this.Puzzle2(input));
     }
 
-    private string Puzzle1(int[] input)
+    private int Puzzle1(int[] input)
     {
-        return "30";
+        var count = 0;
+        for (var i = 1; i < input.Length; i++)
+        {
+            if (input[i] > input[i - 1])
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
-    private string Puzzle2(int[] input)
+    private int Puzzle2(int[] input)
     {
-        return "1234";
+        var count = 0;
+        for (var i = 3; i < input.Length; i++)
+        {
+            if (input[i] > input[i - 3])
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     private class Tests
     {
-        private readonly int[] testInput = new[] { 0 };
+        private readonly int[] testInput = new[] { 199, 200, 208, 210, 200, 207, 240, 269, 260, 263 };
 
         [Test]
         public void Puzzle1()
         {
-            const string expected = "514579";
             var actual = new Day01().Puzzle1(this.testInput);
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(7, actual);
         }
 
         [Test]
         public void Puzzle2()
         {
-            const string expected = "241861950";
             var actual = new Day01().Puzzle2(this.testInput);
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(5, actual);
         }
     }
 }
-
