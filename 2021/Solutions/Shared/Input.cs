@@ -4,7 +4,7 @@
     public static IEnumerable<int> LinesAsInt(string day) => Lines(day).Select(int.Parse);
     public static string Text(string day) => File.ReadAllText(InputString(day));
 
-    public static string[] Blocks(this string s) => s.Split("\r\n\r\n");
+    public static string[] Blocks(this string s) => Text(s).Split("\r\n\r\n");
 
     private static string InputString(string day) => $"Input/{day}.txt";
 }
