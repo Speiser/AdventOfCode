@@ -39,6 +39,46 @@ public class Day02 : Solution
 
     private int Puzzle2(string[] input)
     {
-        return 0;
+        // A for Rock, B for Paper, and C for Scissors
+        // X lose, Y draw, Z win
+        // 1 for Rock, 2 for Paper, and 3 for Scissors
+        // 0 if you lost, 3 if the round was a draw, and 6 if you won
+        var totalScore = 0;
+
+        foreach (var line in input)
+        {
+            switch (line[2])
+            {
+                case 'X':
+                    totalScore += line[0] switch
+                    {
+                        'A' => 3,
+                        'B' => 1,
+                        'C' => 2,
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
+                    break;
+                case 'Y':
+                    totalScore += 3 + line[0] switch
+                    {
+                        'A' => 1,
+                        'B' => 2,
+                        'C' => 3,
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
+                    break;
+                case 'Z':
+                    totalScore += 6 + line[0] switch
+                    {
+                        'A' => 2,
+                        'B' => 3,
+                        'C' => 1,
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
+                    break;
+            }
+        }
+
+        return totalScore;
     }
 }
