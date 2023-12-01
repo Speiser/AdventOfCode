@@ -3,6 +3,7 @@ My solutions for Advent Of Code
 
 | Year | Stars |
 |-----:|------:|
+| 2023 |     2 |
 | 2022 |     8 |
 | 2021 |    15 |
 | 2020 |    34 |
